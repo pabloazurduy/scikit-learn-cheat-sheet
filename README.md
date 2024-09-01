@@ -51,6 +51,16 @@ transformer = Normalizer()
 transformer.fit(data)
 transformer.transform(data)
 ```
+### [KBinsDiscretizer](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html)
+Bin continuous data into intervals.
+```python
+from sklearn.preprocessing import KBinsDiscretizer
+est = KBinsDiscretizer(n_bins=3, 
+                       encode='onehot', # onehot (ordinal too)
+                       strategy='uniform' # quantile
+                       )
+```
+
 
 ### [Binarizer](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Binarizer.html)
 
@@ -87,6 +97,15 @@ poly.fit_transform(data)
 ```
 
 ## 1.1 Text data preprocessing
+
+### [MultiLabelBinarizer](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MultiLabelBinarizer.html)
+Transform between iterable of iterables and a multilabel format.
+
+```python
+from sklearn.preprocessing import MultiLabelBinarizer
+mlb = MultiLabelBinarizer()
+mlb.fit_transform([(1, 2), (3,)])
+```
 
 ### [CountVectorizer](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction)
 
@@ -144,7 +163,7 @@ For a given feature, `OneHotEncoder` will create as many new columns as there ar
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
-encoder = OneHotEncoder()
+encoder = OneHotEncoder(drop='first', sparse_output=False,max_categories=None )
 data_encoded = encoder.fit_transform(data)
 ```
 
@@ -208,9 +227,15 @@ from sklearn.compose import ColumnTransformer
 ct = ColumnTransformer(transformers = [('child_pipeline', child_pipeline, 'children'),
                                        ('age_pipeline', age_pipeline, 'age'),
                                        ('cat', cat_pipeline, ['sex', 'smoker', 'region']),
-                                       ('num', num_pipeline, ['bmi'])
+                                       ('num', num_pipeline, ['bmi']),
+                                       ('np_array_transform', 'passthrough', ['numpy_array']) # creates a non transformed col
                                       ], 
-                       remainder='drop')
+                       remainder='drop', 
+                       sparse_threshold=0
+                       )
+#remember that any pipeline or transformer can be converted in pd dataframe 
+X_out= ct.fit_transform(X_df
+X_df_out = pd.DataFrame(X_out), columns=ct.get_feature_names_out())
 ```
 
 
@@ -223,8 +248,30 @@ FunctionTransformer(func=lambda x:np.where(x<0, np.nan, x).reshape(-1, 1), # vec
                     inverse_func = None, # optional 
                     feature_names_out='one-to-one' #: keeps the same names or alternatively 
                     feature_names_out=lambda ft, fn:fn + '_pos' # args: self FunctionTransformer[self], feat_name upstream
+                    # feature_names_out always return a list ex:['cluster_id']
                     )
+```
+### adding kmeans to a pipeline 
 
+
+```python
+ct = ColumnTransformer(transformers=[('bins', KBinsDiscretizer(n_bins=20, strategy='uniform', encode='onehot'), ['subscriber_id']),
+                                     ('one_hot', OneHotEncoder(drop='first', sparse_output=False,max_categories=None ), ['age_group']),
+                                     ('scaler', StandardScaler(), ['engagement_time', 'engagement_frequency']),
+                                    ],
+                      remainder='drop', 
+                      sparse_threshold=0)
+ct.fit_transform(X_train)
+feat_idx = list(range(len(ct.get_feature_names_out())))
+# this is not very correct given that the function will be called twice even in 
+kmeansf = FunctionTransformer(func= lambda X:KMeans(n_clusters=5).fit_predict(X).reshape(-1,1),
+                              feature_names_out=lambda ft, fn:['cluster_id']
+                             )
+ct_kmeans = ColumnTransformer(transformers=[('cluster_id', kmeansf ,feat_names),
+                                            ('np_array_transform', 'passthrough', feat_names)
+                                           ],
+                      remainder='passthrough')
+                                            
 ```
 
 ### [get_feature_names_out](https://scikit-learn.org/stable/modules/compose.html#tracking-feature-names-in-a-pipeline)
@@ -278,6 +325,14 @@ results = learning_curve(
 
 ## 6. Metrics
 
+### [metrics_module](https://scikit-learn.org/stable/modules/model_evaluation.html#common-cases-predefined-values)
+
+```python
+'neg_mean_squared_error'
+'neg_root_mean_squared_error'
+'balanced_accuracy'
+
+```
 ### [mean_squared_error](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error)
 
 ```python
