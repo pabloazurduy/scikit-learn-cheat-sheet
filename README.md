@@ -74,7 +74,7 @@ imputer.fit(data)
 imputer.transform(data)
 ```
 
-### [PolynomialFeatures¶](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html)
+### [PolynomialFeatures](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html)
 
 Generates polynomial and interaction features.
 Parameters: `degree` specifies the maximal degree of the polynomial features
@@ -113,6 +113,17 @@ data_encoded = encoder.fit_transform(data)
 
 Selects columns based on datatype or the columns name.
 
+### [pandas column selector](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.select_dtypes.html)
+
+Select columns based on their datatype, returns a DataFrame
+```python 
+import pandas as pd 
+numeric_columns = df.select_dtypes(include='number').columns
+str_columns = df.select_dtypes(include='object').columns
+dt_columns = df.select_dtypes(include='datetime').columns 
+
+```
+
 ### [ColumnTransformer](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html#sklearn.compose.ColumnTransformer)
 
 Applies specific transformations to the subset of columns in the data.
@@ -145,6 +156,43 @@ from sklearn.linear_model import LogisticRegression
 model = make_pipeline(
     OneHotEncoder(handle_unknown="ignore"), LogisticRegression(max_iter=500)
 )
+```
+
+### [ColumnTransformer](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html)
+Applies transformers to columns of an array or pandas DataFrame.
+
+```python
+from sklearn.compose import ColumnTransformer 
+
+ct = ColumnTransformer(transformers = [('child_pipeline', child_pipeline, 'children'),
+                                       ('age_pipeline', age_pipeline, 'age'),
+                                       ('cat', cat_pipeline, ['sex', 'smoker', 'region']),
+                                       ('num', num_pipeline, ['bmi'])
+                                      ], 
+                       remainder='drop')
+```
+
+
+### [FunctionTransformer](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html)
+Create a Custom Transformation of a column
+
+```python 
+from sklearn.preprocessing import  FunctionTransformer
+FunctionTransformer(func=lambda x:np.where(x<0, np.nan, x).reshape(-1, 1), # vectorial function 
+                    inverse_func = None, # optional 
+                    feature_names_out='one-to-one' #: keeps the same names or alternatively 
+                    feature_names_out=lambda ft, fn:fn + '_pos' # args: self FunctionTransformer[self], feat_name upstream
+                    )
+
+```
+
+### [get_feature_names_out](https://scikit-learn.org/stable/modules/compose.html#tracking-feature-names-in-a-pipeline)
+To enable model inspection, Pipeline has a `get_feature_names_out()` method, just like all transformers. You can use pipeline slicing to get the feature names going into each step:
+
+```python 
+X = pipe.fit_transform(X)
+pipe.get_feature_names_out()
+pipe[:-1].get_feature_names_out()
 ```
 
 ### [set_config](https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config)
@@ -294,6 +342,42 @@ import matplotlib.pyplot as plt
 precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
 disp = PrecisionRecallDisplay(precision=precision, recall=recall)
 disp.plot()
+plt.show()
+```
+
+### [Feature Importance](https://scikit-learn.org/stable/auto_examples/inspection/plot_permutation_importance.html#sphx-glr-auto-examples-inspection-plot-permutation-importance-py)
+
+```python 
+# feature importance by RF/Tree
+feature_importance = model.feature_importances_
+# plot
+import matplotlib.pyplot as plt
+sorted_idx = np.argsort(feature_importance)
+pos = np.arange(sorted_idx.shape[0]) + 0.5
+fig = plt.figure(figsize=(12, 6))
+plt.subplot(1, 2, 1)
+plt.barh(pos, feature_importance[sorted_idx], align="center")
+plt.yticks(pos, feat_names[sorted_idx])
+plt.title("Feature Importance (MDI)") # based on impurity
+```
+### [permutation_importance](https://scikit-learn.org/stable/modules/permutation_importance.html#permutation-importance)
+
+based on randomization order of the feature and then testing the effect on the score/accuracy of the model 
+
+```python 
+from sklearn.inspection import permutation_importance
+
+result = permutation_importance(model, X, y, n_repeats=10,random_state=42)
+
+sorted_idx = result.importances_mean.argsort()
+plt.subplot(1, 2, 2)
+plt.boxplot(
+    result.importances[sorted_idx].T,
+    vert=False,
+    labels=feat_names[sorted_idx],
+)
+plt.title("Permutation Importance (test set)")
+fig.tight_layout()
 plt.show()
 ```
 
