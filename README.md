@@ -22,7 +22,7 @@ A compilation of main commands for scikit-learn with examples. Inspired by https
 
 Standardizes data by removing the mean and scaling to unit variance.
 
-```
+```python
 from sklearn.preprocessing import StandardScaler
 scaler = StandardScaler()
 scaler.fit(data)
@@ -33,7 +33,7 @@ scaler.transform(data)
 
 Transforms the data so that it values appear in the given range.
 
-```
+```python
 from sklearn.preprocessing import MinMaxScaler
 scaler = MinMaxScaler()
 scaler.fit(data)
@@ -44,7 +44,7 @@ scaler.transform(data)
 
 Each sample (i.e. each row of the data matrix) with at least one non zero component is rescaled independently of other samples so that its norm (l1, l2 or inf) equals one.
 
-```
+```python
 from sklearn.preprocessing import Normalizer
 transformer = Normalizer()
 transformer.fit(data)
@@ -55,7 +55,7 @@ transformer.transform(data)
 
 Binarizes data (set feature values to 0 or 1) according to a threshold.
 
-```
+```python
 from sklearn.preprocessing import Binarizer
 transformer = Binarizer().fit(data)
 transformer.transform(data)
@@ -66,7 +66,7 @@ transformer.transform(data)
 Replaces missing values using a descriptive statistic (e.g. mean, median, or most frequent) along each column, or using a constant value.
 Parameters: `missing_values` specifies what we assume as a missing value, `strategy` specifies what we will replace the missing values with.
 
-```
+```python
 import numpy as np
 from sklearn.impute import SimpleImputer
 imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
@@ -79,7 +79,7 @@ imputer.transform(data)
 Generates polynomial and interaction features.
 Parameters: `degree` specifies the maximal degree of the polynomial features
 
-```
+```python
 from sklearn.preprocessing import PolynomialFeatures
 poly = PolynomialFeatures(degree = 2)
 poly.fit_transform(data)
@@ -91,7 +91,7 @@ poly.fit_transform(data)
 
 `OrdinalEncoder` will encode each category with a different number.
 
-```
+```python
 from sklearn.preprocessing import OrdinalEncoder
 encoder = OrdinalEncoder()
 data_encoded = encoder.fit_transform(data)
@@ -101,7 +101,7 @@ data_encoded = encoder.fit_transform(data)
 
 For a given feature, `OneHotEncoder` will create as many new columns as there are possible categories. For a given sample, the value of the column corresponding to the category will be set to 1 while all the columns of the other categories will be set to 0.
 
-```
+```python
 from sklearn.preprocessing import OneHotEncoder
 encoder = OneHotEncoder()
 data_encoded = encoder.fit_transform(data)
@@ -117,7 +117,7 @@ Selects columns based on datatype or the columns name.
 
 Applies specific transformations to the subset of columns in the data.
 
-```
+```python
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.compose import make_column_selector as selector
@@ -138,7 +138,7 @@ preprocessor = ColumnTransformer([
 
 Allows to construct a pipeline – a set of commands/models/etc. which will be executed consequently.
 
-```
+```python
 from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LogisticRegression
 
@@ -151,7 +151,7 @@ model = make_pipeline(
 
 Allows to vizualize the pipelines in Jupyter, needs to be set once at the beginning of your notebook.
 
-```
+```python
 from sklearn import set_config
 set_config(display="diagram")
 ```
@@ -162,7 +162,7 @@ set_config(display="diagram")
 
 Split arrays or matrices into random train and test subsets.
 
-```
+```python
 from sklearn.model_selection import train_test_split
 data_train, data_test, target_train, target_test = train_test_split(
     data, target, random_state=42)
@@ -172,7 +172,7 @@ data_train, data_test, target_train, target_test = train_test_split(
 
 Allows to see how the model performance changes when choosing different train/test split size.
 
-```
+```python
 from sklearn.tree import DecisionTreeRegressor
 regressor = DecisionTreeRegressor()
 
@@ -191,7 +191,7 @@ results = learning_curve(
 
 ### [mean_squared_error](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error)
 
-```
+```python
 from sklearn.metrics import mean_squared_error
 mean_squared_error(y_true, y_pred)
 ```
@@ -200,7 +200,7 @@ mean_squared_error(y_true, y_pred)
 
 `average` parameter is required for multiclass/multilabel targets.
 
-```
+```python
 from sklearn.metrics import precision_score
 precision_score(y_true, y_pred, average='macro')
 ```
@@ -209,7 +209,7 @@ precision_score(y_true, y_pred, average='macro')
 
 `average` parameter is required for multiclass/multilabel targets.
 
-```
+```python
 from sklearn.metrics import recall_score
 recall_score(y_true, y_pred, average='macro')
 ```
@@ -218,14 +218,14 @@ recall_score(y_true, y_pred, average='macro')
 
 The balanced accuracy in binary and multiclass classification problems to deal with imbalanced datasets. It is defined as the average of recall obtained on each class.
 
-```
+```python
 from sklearn.metrics import balanced_accuracy_score
 balanced_accuracy_score(y_true, y_pred)
 ```
 
 ### [confusion_matrix](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix)
 
-```
+```python
 from sklearn.metrics import confusion_matrix
 labels=["a", "b", "c"]
 cm = confusion_matrix(y_true, y_pred, labels=labels)
@@ -235,7 +235,7 @@ cm = confusion_matrix(y_true, y_pred, labels=labels)
 
 Confusion Matrix visualization.
 
-```
+```python
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
@@ -249,7 +249,7 @@ plt.show()
 
 `pos_label` parameter defines the label of the positive class.
 
-```
+```python
 from sklearn.metrics import roc_curve
 fpr, tpr, thresholds = roc_curve(y_true, y_scores, pos_label=1)
 ```
@@ -258,7 +258,7 @@ fpr, tpr, thresholds = roc_curve(y_true, y_scores, pos_label=1)
 
 Compute Area Under the Curve (AUC).
 
-```
+```python
 from sklearn.metrics import roc_curve, auc
 fpr, tpr, thresholds = roc_curve(y_true, y_scores, pos_label=1)
 roc_auc = auc(fpr, tpr)
@@ -268,7 +268,7 @@ roc_auc = auc(fpr, tpr)
 
 ROC Curve visualization.
 
-```
+```python
 from sklearn.metrics import roc_curve, auc, RocCurveDisplay
 import matplotlib.pyplot as plt
 fpr, tpr, thresholds = roc_curve(y_true, y_scores, pos_label=1)
@@ -279,7 +279,7 @@ plt.show()
 
 ### [precision_recall_curve](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html#sklearn.metrics.precision_recall_curve)
 
-```
+```python
 from sklearn.metrics import precision_recall_curve
 precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
 ```
@@ -288,7 +288,7 @@ precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
 
 Precision-Recall visualization.
 
-```
+```python
 from sklearn.metrics import precision_recall_curve, PrecisionRecallDisplay
 import matplotlib.pyplot as plt
 precision, recall, thresholds = precision_recall_curve(y_true, y_scores)
@@ -303,7 +303,7 @@ plt.show()
 
 Greedy search over specified parameter values for an estimator.
 
-```
+```python
 from sklearn.model_selection import GridSearchCV
 param_grid = {
     'parameter_A': (0.01, 0.1, 1, 10),
@@ -317,7 +317,7 @@ model_grid_search.fit(data, target)
 
 In contrast to `GridSearchCV`, not all parameter values are tried out, but rather a fixed number of parameter settings is sampled from the specified distributions. The number of parameter settings that are tried is given by `n_iter`.
 
-```
+```python
 from sklearn.model_selection import RandomizedSearchCV
 param_grid = {
     'parameter_A': (0.01, 0.1, 1, 10),
@@ -335,7 +335,7 @@ model_random_search.fit(data, target)
 
 Evaluate metric(s) by cross-validation and also record fit/score times. `scoring` parameters is used to define which metric(s) will be computed during each fold. In the `cv` parameter, one can pass any type of splitting strategy: k-fold, stratified and etc.
 
-```
+```python
 from sklearn.model_selection import cross_validate
 cv_results = cross_validate(
     model, data, target, cv=5, scoring="neg_mean_absolute_error")
@@ -345,7 +345,7 @@ cv_results = cross_validate(
 
 Identical to calling the `cross_validate` function and to select the test score only.
 
-```
+```python
 from sklearn.model_selection import cross_val_score
 scores = cross_val_score(model, data, target)
 ```
@@ -354,7 +354,7 @@ scores = cross_val_score(model, data, target)
 
 Determine training and test scores for varying parameter values.
 
-```
+```python
 from sklearn.model_selection import validation_curve
 param_A = [1, 5, 10, 15, 20, 25]
 train_scores, test_scores = validation_curve(
@@ -366,7 +366,7 @@ train_scores, test_scores = validation_curve(
 
 K-Folds cross-validator.
 
-```
+```python
 from sklearn.model_selection import KFold
 cv = KFold(n_splits=2)
 cv..get_n_splits(data)
@@ -375,7 +375,7 @@ cv..get_n_splits(data)
 
 Random permutation cross-validator.
 
-```
+```python
 from sklearn.model_selection import ShuffleSplit
 cv = ShuffleSplit(n_splits=5, random_state=0)
 cv.get_n_splits(data)
@@ -385,7 +385,7 @@ cv.get_n_splits(data)
 
 Stratified K-Folds cross-validator, generates test sets such that all contain the same distribution of classes, or as close as possible.
 
-```
+```python
 from sklearn.model_selection import StratifiedKFold
 cv = StratifiedKFold(n_splits=2)
 cv.get_n_splits(data, target)
@@ -395,7 +395,7 @@ cv.get_n_splits(data, target)
 
 K-fold iterator variant with non-overlapping groups, which makes each group appear exactly once in the test set across all folds. `groups` should be an array of the same length of data. For each row `groups` should indicate which group it belongs to.
 
-```
+```python
 from sklearn.model_selection import GroupKFold
 cv = GroupKFold(n_splits=2)
 cv.get_n_splits(data, target, groups=groups)
@@ -405,7 +405,7 @@ cv.get_n_splits(data, target, groups=groups)
 
 Time Series cross-validator, provides train/test indices to split time series data samples that are observed at fixed time intervals, in train/test sets.
 
-```
+```python
 from sklearn.model_selection import TimeSeriesSplit
 cv = TimeSeriesSplit(n_splits=2)
 cv.get_n_splits(data, target)
@@ -415,7 +415,7 @@ cv.get_n_splits(data, target)
 
 Leave One Group Out cross-validator, provides train/test indices to split data such that each training set is comprised of all samples except ones belonging to one specific group. `groups` should be an array of the same length of data. For each row `groups` should indicate which group it belongs to.
 
-```
+```python
 from sklearn.model_selection import LeaveOneGroupOut
 cv = LeaveOneGroupOut()
 cv.get_n_splits(data, target, groups=groups)
@@ -427,7 +427,7 @@ cv.get_n_splits(data, target, groups=groups)
 
 Predicts the same value based on a (simple) rule without using training features. `strategy` can be `{“mean”, “median”, “quantile”, “constant”}`.
 
-```
+```python
 from sklearn.dummy import DummyRegressor
 model = DummyRegressor(strategy="mean")
 model.fit(data, target)
@@ -437,7 +437,7 @@ model.fit(data, target)
 
 Predicts the same class based on a (simple) rule without using training features. `strategy` can be `{“most_frequent”, “prior”, “stratified”, “uniform”, “constant”}`.
 
-```
+```python
 from sklearn.dummy import DummyClassifier
 model = DummyClassifier(strategy="most_frequent")
 model.fit(data, target)
@@ -449,7 +449,7 @@ model.fit(data, target)
 
 Ordinary least squares Linear Regression.
 
-```
+```python
 from sklearn.linear_model import LinearRegression
 model = LinearRegression()
 model.fit(data, target)
@@ -459,7 +459,7 @@ model.fit(data, target)
 
 Linear least squares with l2 regularization. `alpha` parameter defines the l2 multiplier coefficient.
 
-```
+```python
 from sklearn.linear_model import Ridge
 model = Ridge(alpha=1.0)
 model.fit(data, target)
@@ -469,7 +469,7 @@ model.fit(data, target)
 
 Ridge regression with built-in cross-validation. `alphas` defines the array of alpha values to try.
 
-```
+```python
 from sklearn.linear_model import RidgeCV
 model = RidgeCV(alphas=[1e-3, 1e-2, 1e-1, 1])
 model.fit(data, target)
@@ -479,7 +479,7 @@ model.fit(data, target)
 
 Logistic Regression classifier. `penalty` parameter is by default `l2`, `C` defines inverse of regularization strength, must be a positive float.
 
-```
+```python
 from sklearn.linear_model import LogisticRegression
 model = LogisticRegression(C = 1.0)
 model.fit(data, target)
@@ -491,7 +491,7 @@ model.fit(data, target)
 
 Regression based on k-nearest neighbors. `n_neighbors` defines number of neighbors to use.
 
-```
+```python
 from sklearn.neighbors import KNeighborsRegressor
 model = KNeighborsRegressor(n_neighbors=2)
 model.fit(data, target)
@@ -501,7 +501,7 @@ model.fit(data, target)
 
 Regression based on k-nearest neighbors. `n_neighbors` defines number of neighbors to use.
 
-```
+```python
 from sklearn.neighbors import KNeighborsClassifier
 model = KNeighborsRegressor(n_neighbors=2)
 model.fit(data, target)
@@ -513,7 +513,7 @@ model.fit(data, target)
 
 A decision tree regressor. `max_depth` defines the maximum depth of a tree.
 
-```
+```python
 from sklearn.tree import DecisionTreeRegressor
 model = DecisionTreeRegressor(max_depth=2)
 model.fit(data, target)
@@ -523,7 +523,7 @@ model.fit(data, target)
 
 A decision tree classifier. `max_depth` defines the maximum depth of a tree.
 
-```
+```python
 from sklearn.tree import DecisionTreeClassifier
 model = DecisionTreeClassifier(max_depth=2)
 model.fit(data, target)
@@ -535,7 +535,7 @@ model.fit(data, target)
 
 Gradient Boosting trees for regression. `max_depth` defines the maximum depth of a tree, `learning_rate` defines the "contribution" of each tree, `n_estimators` controls the number of trained trees.
 
-```
+```python
 from sklearn.ensemble import GradientBoostingRegressor
 model = GradientBoostingRegressor(max_depth=2, learning_rate=1.0, n_estimators=100)
 model.fit(data, target)
@@ -545,7 +545,7 @@ model.fit(data, target)
 
 Gradient Boosting for classification. `max_depth` defines the maximum depth of a tree, `learning_rate` defines the "contribution" of each tree, `n_estimators` controls the number of trained trees.
 
-```
+```python
 from sklearn.ensemble import GradientBoostingClassifier
 model = GradientBoostingRegressor(max_depth=2, learning_rate=1.0, n_estimators=100)
 model.fit(data, target)
@@ -555,7 +555,7 @@ model.fit(data, target)
 
 A random forest regressor. `max_depth` defines the maximum depth of a tree, `n_estimators` controls the number of trained trees.
 
-```
+```python
 from sklearn.ensemble import RandomForestRegressor
 model = RandomForestRegressor(max_depth=2, n_estimators=100)
 model.fit(data, target)
