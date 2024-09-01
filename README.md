@@ -3,6 +3,7 @@ A compilation of main commands for scikit-learn with examples. Inspired by https
 
 - [scikit-learn-cheat-sheet](#scikit-learn-cheat-sheet)
   - [1. Numerical data preprocessing](#1-numerical-data-preprocessing)
+  - [1.1 Text data preprocessing](#11-text-data-preprocessing)
   - [2. Encoding](#2-encoding)
   - [3. Column selection and transformation](#3-column-selection-and-transformation)
   - [4. Pipelines](#4-pipelines)
@@ -84,6 +85,46 @@ from sklearn.preprocessing import PolynomialFeatures
 poly = PolynomialFeatures(degree = 2)
 poly.fit_transform(data)
 ```
+
+## 1.1 Text data preprocessing
+
+### [CountVectorizer](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction)
+
+We call vectorization the general process of turning a collection of text documents into numerical feature vectors. This specific strategy (tokenization, counting and normalization) is called the Bag of Words or “Bag of n-grams” representation. Documents are described by word occurrences while completely ignoring the relative position information of the words in the document.
+
+
+```python 
+from sklearn.feature_extraction.text import CountVectorizer
+vectorizer = CountVectorizer(ngram_range=(1, 2), # do words and pairs of words
+                             token_pattern=r'\b\w+\b', 
+                             lowercase=True, 
+                             stop_words=None, #'english' or list of words
+                             min_df=1 #float:[0,1] When building the vocabulary ignor terms that have a document frequency strictly lower than the given threshold.
+                             max_df=0.9, #ignore terms that have a document frequency strictly higher than the given threshold  (to infer stop words)
+                             )
+
+X = vectorizer.fit_transform(corpus) # create a sparse matrix
+# get vocabulary 
+vectorizer.vocabulary_.get('document')
+```
+### [TfidfTransformer](https://scikit-learn.org/stable/modules/feature_extraction.html#tfidf-term-weighting)
+
+
+$$\text{tf-idf(t,d)}=\text{tf(t,d)} \times \text{idf(t)}$$
+$$\text{idf}(t) = \log{\frac{1 + n}{1+\text{df}(t)}} + 1$$
+
+```python
+from sklearn.feature_extraction.text import TfidfTransformer, TfidfVectorizer 
+# the vectorizer is a merge between the CountVectorizer and the TfidfTransformer
+transformer = TfidfTransformer(norm='l2', 
+                               use_idf=True, 
+                               smooth_idf=True, #adding one to document frequencies, Prevents zero divisions. 
+                               sublinear_tf=False)
+transformer
+
+```
+
+
 
 ## 2. Encoding
 
