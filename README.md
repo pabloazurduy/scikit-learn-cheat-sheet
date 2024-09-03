@@ -85,6 +85,22 @@ imputer.fit(data)
 imputer.transform(data)
 ```
 
+
+### [IterativeImputer](https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html#sklearn.impute.IterativeImputer)
+
+Multivariate imputer that estimates each feature from all the others.
+A strategy for imputing missing values by modeling each feature with missing values as a function of other features in a round-robin fashion.
+
+```python
+# explicitly require this experimental feature
+from sklearn.experimental import enable_iterative_imputer  # noqa
+# now you can import normally from sklearn.impute
+from sklearn.impute import IterativeImputer
+imp_mean = IterativeImputer(estimator=None, # by default is BayesianRidge()
+                            random_state=0)
+imp_mean.fit([[7, 2, 3], [4, np.nan, 6], [10, 5, 9]])
+```
+
 ### [PolynomialFeatures](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html)
 
 Generates polynomial and interaction features.
